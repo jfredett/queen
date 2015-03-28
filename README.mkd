@@ -1,0 +1,3 @@
+# queen
+
+A rust program to solve the n-queens problem

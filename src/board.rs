@@ -43,8 +43,17 @@ impl Board {
     return false;
   }
 
+  pub fn add_noncolliding_queen(&mut self) {
+  }
+
   pub fn print(&self) {
+    print!("  ");
+    for col in 0..self.size {
+      print!("{} ", col);
+    }
+    println!("");
     for i in 0..self.size {
+      print!("{} ", i);
       for j in 0..self.size {
         if self.has_queen(i,j) {
           print!("Q");
