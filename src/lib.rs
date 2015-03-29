@@ -1,2 +1,2 @@
-pub mod piece;
+pub mod position;
 pub mod board;
