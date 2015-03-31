@@ -18,7 +18,7 @@ impl Position {
     }
 
     pub fn bounded_by(&self, bound: usize) -> bool {
-        (self.x <= bound as u16) && (self.y <= bound as u16)
+        (self.x < bound as u16) && (self.y < bound as u16)
     }
 }
 
@@ -65,6 +65,18 @@ impl ColumnIterator {
     fn iterator_vector() -> (u16, u16) { (0,1) }
 }
 
+impl RankIterator {
+    fn new(source_pos: &Position, size: usize) -> RankIterator {
+        RankIterator {
+            current_position: Position::new(0, (*source_pos).y),
+            size: size
+        }
+    }
+
+    fn iterator_vector() -> (u16, u16) { (1,0) }
+}
+
+
 impl Iterator for ColumnIterator {
     type Item = Position;
     fn next(&mut self) -> Option<Position> {
@@ -80,8 +92,22 @@ impl Iterator for ColumnIterator {
     }
 }
 
+impl Iterator for RankIterator {
+    type Item = Position;
+    fn next(&mut self) -> Option<Position> {
+        if (self.current_position).bounded_by(self.size) {
+            let (x,y) = RankIterator::iterator_vector();
+            let ret = Some(self.current_position.clone());
+            self.current_position = self.current_position.adjust(x,y);
+            return ret
+        } else {
+            None
+        }
+    }
+}
+
 #[test]
-fn column_creation() {
+fn column_iter_creation() {
     let col_iter = ColumnIterator::new(&Position::new(1,2), 8);
     assert!(col_iter.current_position.x == 1);
     assert!(col_iter.current_position.y == 0);
@@ -93,9 +119,24 @@ fn column_iterator() {
     assert!(col_iter.next().unwrap() == Position::new(1,0));
     assert!(col_iter.next().unwrap() == Position::new(1,1));
     assert!(col_iter.next().unwrap() == Position::new(1,2));
-    assert!(col_iter.next().unwrap() == Position::new(1,3));
+    assert!(col_iter.next() == None);
 }
 
+#[test]
+fn rank_iter_creation() {
+    let rank_iter = RankIterator::new(&Position::new(1,2), 8);
+    assert!(rank_iter.current_position.x == 0);
+    assert!(rank_iter.current_position.y == 2);
+}
+
+#[test]
+fn rank_iterator() {
+    let mut rank_iter = RankIterator::new(&Position::new(1,2), 3);
+    assert!(rank_iter.next().unwrap() == Position::new(0,2));
+    assert!(rank_iter.next().unwrap() == Position::new(1,2));
+    assert!(rank_iter.next().unwrap() == Position::new(2,2));
+    assert!(rank_iter.next() == None);
+}
 
 /*impl PositionIterator {*/
 
