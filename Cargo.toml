@@ -3,3 +3,21 @@
 name = "queen"
 version = "0.0.1"
 authors = ["fredettej"]
+
+[profile.dev]
+opt-level = 0
+debug = true
+rpath = false
+lto = false
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = false
+
+[profile.test]
+opt-level = 0
+debug = true
+rpath = false
+lto = false
