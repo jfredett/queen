@@ -21,16 +21,19 @@ impl ColumnIterator {
 impl Iterator for ColumnIterator {
     type Item = Position;
     fn next(&mut self) -> Option<Position> {
-        if (self.current_position).bounded_by(self.size) {
-            let (x,y) = ColumnIterator::iterator_vector();
-            let ret = Some(self.current_position.clone());
-
-            self.current_position = self.current_position.adjust(x,y);
-            return ret
-        } else {
-            None
-        }
+        PositionIteratorImpl::next(self)
     }
+}
+
+impl PositionIterator for ColumnIterator {
+    fn current_position(&self) -> Position { self.current_position }
+
+    fn adjust(&mut self) {
+        // (0,1) is the unit column vector
+        self.current_position = self.current_position.adjust(0,1)
+    }
+
+    fn size(&self) -> usize { self.size }
 }
 
 #[test]

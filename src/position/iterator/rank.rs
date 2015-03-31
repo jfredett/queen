@@ -26,6 +26,7 @@ impl PositionIterator for RankIterator {
     fn current_position(&self) -> Position { self.current_position }
 
     fn adjust(&mut self) {
+        // (0,1) is the unit rank vector
         self.current_position = self.current_position.adjust(1,0)
     }
 
